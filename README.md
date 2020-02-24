@@ -1,1 +1,1 @@
-# CDD-Training-Ops
+# CDD Release DSL Template Repository
