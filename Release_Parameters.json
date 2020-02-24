@@ -1,33 +1,24 @@
 {
 "parameters": [{
-			"name": "musicUiAppVersion",
-			"value": "2.6"
+			"name": "RELEASE_VERSION",
+			"value": "3.0"
 		},
 		{
-			"name": "musicBackendAppVersion",
-			"value": "6.7"
+			"name": "FLIGHT_PRICING_APPLICATION_VERSION",
+			"value": "3.0"
 		},
 		{
-			"name": "musivImsReleaseVersion",
-			"value": "58"
+			"name": "FLIGHT_PORTAL_APPLICATION_VERSION",
+			"value": "3.0"
 		},
 		{
-			"name": "ReleaseVersion",
-			"value": "v58"
-		},
-		{
-			"name": "ReleaseName",
-			"value": "Banking-FY19Q2-Andrew-Demo"
-		},
-		
-		{
-			"name": "TemplateName",
-			"value": "Assaf-T"
+			"name": "FLIGHT_MANAGEMENT_APPLICATION_VERSION",
+			"value": "3.0"
 		}
 	],
 	"reference": {
-		"fileName": "SaaS-prod-dsl-objects only.json",
-		"fileSource": "GardenPipelineReference"
+		"fileName": "Release_Template.json",
+		"fileSource": "CDD-Release-Template-FileSource"
 	}
 
 }
