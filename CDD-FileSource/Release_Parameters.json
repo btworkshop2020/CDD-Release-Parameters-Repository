@@ -1,0 +1,24 @@
+{
+"parameters": [{
+			"name": "RELEASE_VERSION",
+			"value": "3.0"
+		},
+		{
+			"name": "FLIGHT_PRICING_APPLICATION_VERSION",
+			"value": "3.0"
+		},
+		{
+			"name": "FLIGHT_PORTAL_APPLICATION_VERSION",
+			"value": "3.0"
+		},
+		{
+			"name": "FLIGHT_MANAGEMENT_APPLICATION_VERSION",
+			"value": "3.0"
+		}
+	],
+	"reference": {
+		"fileName": "Release_Template.json",
+		"fileSource": "CDD-Release-Template-FileSource"
+	} 
+
+}
