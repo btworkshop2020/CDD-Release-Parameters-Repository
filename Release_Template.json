@@ -1,0 +1,387 @@
+{
+	"objects": [
+		{
+			"application": "Local|FlightPricing",
+			"name": "${FLIGHT_PRICING_APPLICATION_VERSION}",
+			"kind": "ApplicationVersion"
+		},
+		{
+			"application": "Local|FlightMng",
+			"name": "${FLIGHT_MANAGEMENT_APPLICATION_VERSION}",
+			"kind": "ApplicationVersion"
+		},
+		{
+			"application": "Local|FlightPortal",
+			"name": "${FLIGHT_PORTAL_APPLICATION_VERSION}",
+			"kind": "ApplicationVersion"
+		},
+		{
+			"applicationVersion": "Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}",
+			"name": "End_of_Feb",
+			"kind": "ContentSource",
+			"endpoint": "Yochay Endpoint",
+			"plugin": "Rally®/2.11",
+			"parameters": {
+				"release": "Digital BizOps V1.0",
+				"project": "DevOps DBO",
+				"iteration": "V1.0 Sprint B",
+				"importFromChildProject": "false",
+				"type": "User Story"
+			},
+			"type": "Add Content"
+		},
+		{
+			"applicationVersion": "Local|FlightPortal/${FLIGHT_PORTAL_APPLICATION_VERSION}",
+			"name": "theme",
+			"kind": "ContentSource",
+			"endpoint": "Gil_Rally",
+			"plugin": "Rally®/2.11",
+			"parameters": {
+				"release": "Feb_Portal",
+				"project": "CDD Training",
+				"importFromChildProject": "false",
+				"type": "User Story"
+			},
+			"type": "Add Content"
+		},
+		{
+			"applicationVersion": "Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}",
+			"excludeFilesAndFolders": "src/integTest/**",
+			"commitRegularExpression": "^[ \\\\\\\\t]*([A-Za-z0-9_]+)",
+			"name": "1.0_commitSource",
+			"kind": "CommitSource",
+			"endpoint": "Gil_Github",
+			"plugin": "GitHub/1.0.2",
+			"parameters": {
+				"owner": "ESD",
+				"repository": "cdd-dummy-app"
+			},
+			"type": "Get Commit Messages"
+		},
+		{
+			"applicationVersion": "Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}",
+			"name": "Gradle Tests",
+			"kind": "TestSource",
+			"endpoint": "Gil_Gradle",
+			"plugin": "Gradle Testing/1.4.0",
+			"parameters": {
+				"jvmParameters": "-Dtest.HOST=mundev000611.bpc.broadcom.net",
+				"branch": "BT"
+			},
+			"type": "Import Test Suites",
+			"tags": [
+				"integrationTests"
+			]
+		},
+		{
+			"applicationVersion": "Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}",
+			"name": "Robot tests",
+			"kind": "TestSource",
+			"endpoint": "Gil_Robot",
+			"plugin": "Robot Framework/1.2",
+			"parameters": {
+				"branch": "BT",
+				"extraRobotParams": "-v HOST:mundev000611.bpc.broadcom.net -v PORT:8080 -v SCHEME:http -v CONTEXT_SUFFIX:dummy -v LIBRARIES:\\${projectRoot}/src/integTest/robot/common -v RESOURCES:\\${projectRoot}/src/integTest/robot/resources"
+			},
+			"type": "Import Test Suites",
+			"tags": [
+				"robot",
+				"integrationTests"
+			]
+		},
+		{
+			"applicationVersions": [
+				"Local|FlightMng/${FLIGHT_MANAGEMENT_APPLICATION_VERSION}",
+				"Local|FlightPortal/${FLIGHT_PORTAL_APPLICATION_VERSION}",
+				"Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}"
+			],
+			"ownerParties": [
+				"btworkshop2020@gmail.com"
+			],
+			"markAsDonePhaseName": "",
+			"runOnCreation": false,
+			"version": "${RELEASE_VERSION}",
+			"name": "FlightsManager",
+			"kind": "Release"
+		},
+		{
+			"release": "FlightsManager/${RELEASE_VERSION}",
+			"isProduction": false,
+			"scope": "RELEASE_SCOPE",
+			"value": "CHG0030456",
+			"name": "CR_ID",
+			"kind": "ReleaseToken"
+		},
+		{
+			"release": "FlightsManager/${RELEASE_VERSION}",
+			"isProduction": false,
+			"scope": "RELEASE_SCOPE",
+			"value": "",
+			"name": "CR_PROD",
+			"kind": "ReleaseToken"
+		},
+		{
+			"release": "FlightsManager/${RELEASE_VERSION}",
+			"environments": [
+				"Nightly_Flights"
+			],
+			"isApprovalRequired": false,
+			"skipTasksWithUnchangedApplications": false,
+			"approvalGate": "AUTOMATIC",
+			"name": "Nightly",
+			"kind": "Phase"
+		},
+		{
+			"release": "FlightsManager/${RELEASE_VERSION}",
+			"isApprovalRequired": false,
+			"onFailureFailedPhase": "Nightly",
+			"skipTasksWithUnchangedApplications": false,
+			"approvalGate": "ON_FAILURE",
+			"name": "Failed Nightly",
+			"kind": "Phase"
+		},
+		{
+			"release": "FlightsManager/${RELEASE_VERSION}",
+			"environments": [
+				"Verify_Flights"
+			],
+			"previousPhase": "Nightly",
+			"isApprovalRequired": false,
+			"skipTasksWithUnchangedApplications": false,
+			"approvalGate": "MANUAL",
+			"name": "Verify",
+			"kind": "Phase"
+		},
+		{
+			"release": "FlightsManager/${RELEASE_VERSION}",
+			"environments": [
+				"Production_Flights"
+			],
+			"plannedStartDate": "28/02/2020 10:54:00 Z",
+			"plannedEndDate": "29/02/2020 10:54:00 Z",
+			"previousPhase": "Verify",
+			"isApprovalRequired": false,
+			"skipTasksWithUnchangedApplications": false,
+			"approvalGate": "SCHEDULED",
+			"name": "Production",
+			"kind": "Phase"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Nightly",
+			"isDisabled": false,
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Deploy Flight Pricing",
+			"kind": "Task",
+			"endpoint": "Gil_Tomcat",
+			"plugin": "Tomcat/1.0",
+			"parameters": {
+				"tomcatContextPath": "/dummy",
+				"packageGroup": "FlightPricing",
+				"packageVersion": "1.0",
+				"packageArtifact": "dummy",
+				"buildNumber": "%FlightPricing.last_successful_change%"
+			},
+			"type": "Deploy Artifact"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Nightly",
+			"isDisabled": false,
+			"previousTasks": [
+				"Deploy Flight Pricing"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Check scan",
+			"kind": "Task",
+			"endpoint": "Gil_Sonar",
+			"plugin": "SonarQube/1.1",
+			"parameters": {
+				"projectKey": "Gregam3_ASEGroup1",
+				"failOnWarning": "false"
+			},
+			"type": "Check Project Status"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Nightly",
+			"applicationVersions": [
+				"Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}"
+			],
+			"isDisabled": false,
+			"previousTasks": [
+				"Check scan"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"tags": [
+				"robot",
+				"integrationTests"
+			],
+			"name": "Run Tests",
+			"kind": "Task",
+			"plugin": "ADAPTIVE TESTING/1.1.1",
+			"parameters": {
+				"changeId": "%FlightPricing.last_successful_change%",
+				"runOnlySubset": "true"
+			},
+			"type": "Run Adaptive Testing"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Failed Nightly",
+			"isDisabled": false,
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Send message",
+			"kind": "Task",
+			"endpoint": "Gil_Slack",
+			"plugin": "Slack/1.1",
+			"parameters": {
+				"message": "Nightly Failed - %FlightPricing.last_successful_change%",
+				"username": "CDDirector"
+			},
+			"type": "Post message"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Verify",
+			"isDisabled": false,
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Open SN ticket",
+			"kind": "Task",
+			"endpoint": "Gil_ServiceNow",
+			"plugin": "ServiceNow/2.2",
+			"parameters": {
+				"changeRequestId": "%CR_ID%",
+				"shortDescription": "Deploy on verify"
+			},
+			"type": "Create Change Request"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Verify",
+			"isDisabled": false,
+			"previousTasks": [
+				"Open SN ticket"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Wait for SN approval",
+			"kind": "Task",
+			"endpoint": "Gil_ServiceNow",
+			"plugin": "ServiceNow/2.2",
+			"parameters": {
+				"changeRequestId": "%CR_ID%",
+				"pollInterval": "60",
+				"statusField": "Status",
+				"requiredStatus": "approved",
+				"ticketType": "Change Request"
+			},
+			"type": "Wait For Approval"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Verify",
+			"applicationVersions": [
+				"Local|FlightPricing/${FLIGHT_PRICING_APPLICATION_VERSION}"
+			],
+			"isDisabled": false,
+			"previousTasks": [
+				"Wait for SN approval"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"tags": [
+				"integrationTests"
+			],
+			"name": "Run Tests",
+			"kind": "Task",
+			"plugin": "ADAPTIVE TESTING/1.1.1",
+			"parameters": {
+				"changeId": "%FlightPricing.last_successful_change%",
+				"runOnlySubset": "false"
+			},
+			"type": "Run Adaptive Testing"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Verify",
+			"isDisabled": false,
+			"previousTasks": [
+				"Run Tests"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Send message to all teams",
+			"kind": "Task",
+			"endpoint": "Gil_Slack",
+			"plugin": "Slack/1.1",
+			"parameters": {
+				"message": "Done Verify",
+				"username": "CDDirector"
+			},
+			"type": "Post message"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Verify",
+			"isDisabled": false,
+			"previousTasks": [
+				"Run Tests"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Open SN for Prod",
+			"kind": "Task",
+			"endpoint": "Gil_ServiceNow",
+			"plugin": "ServiceNow/2.2",
+			"parameters": {
+				"changeRequestId": "%CR_PROD%",
+				"shortDescription": "Deploy on verify"
+			},
+			"type": "Create Change Request"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Production",
+			"isDisabled": false,
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Wait for SN approval",
+			"kind": "Task",
+			"endpoint": "Gil_ServiceNow",
+			"plugin": "ServiceNow/2.2",
+			"parameters": {
+				"changeRequestId": "%CR_ID%",
+				"pollInterval": "60",
+				"statusField": "Status",
+				"requiredStatus": "approved",
+				"ticketType": "Change Request"
+			},
+			"type": "Wait For Approval"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Production",
+			"isDisabled": false,
+			"previousTasks": [
+				"Wait for SN approval"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Manual regression",
+			"kind": "Task"
+		},
+		{
+			"phase": "FlightsManager/${RELEASE_VERSION}/Production",
+			"isDisabled": false,
+			"previousTasks": [
+				"Manual regression"
+			],
+			"isOnFailurePhaseEnabled": true,
+			"isSkipTaskOnFailure": false,
+			"name": "Send message to all teams",
+			"kind": "Task",
+			"endpoint": "Gil_Slack",
+			"plugin": "Slack/1.1",
+			"parameters": {
+				"message": "Done Verify",
+				"username": "CDDirector"
+			},
+			"type": "Post message"
+		}
+	]
+}
