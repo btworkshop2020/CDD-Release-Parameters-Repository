@@ -2,7 +2,7 @@
 "parameters": [{
 			"name": "RELEASE_VERSION",
 			"value": "5.0"
-		}, 
+		},  
 		{
 			"name": "FLIGHT_PRICING_APPLICATION_VERSION",
 			"value": "5.0"
