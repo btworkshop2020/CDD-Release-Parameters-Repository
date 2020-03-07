@@ -15,7 +15,7 @@
 			"name": "FLIGHT_MANAGEMENT_APPLICATION_VERSION",
 			"value": "5.0"
 		}  
-	],
+	], 
 	"reference": {
 		"fileName": "Release_Template.json",
 		"fileSource": "CDD-Release-Template-FileSource"
